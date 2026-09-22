@@ -1,6 +1,36 @@
-# IsyaratKu-edge: Real-Time Hand Gesture Recognition & Translation System
+<p align="center">
+  <img src="docs/logo.jpg" alt="IsyaratKu-Edge Logo" width="280" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+</p>
 
-Sistem Pengenalan dan Penerjemahan Bahasa Isyarat (Hand Gesture) secara Real-Time berbasis Machine Learning untuk Lingkungan IoT (**ESP32-CAM + Raspberry Pi 5 / PC**).
+<h1 align="center">IsyaratKu-Edge</h1>
+<p align="center">
+  <em>Empowering Inclusive Voice — Real-Time Edge AI Hand Gesture Translation System</em>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/Python-3.13-blue.svg" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Open%20Source-%E2%99%A5-red.svg" alt="Open Source">
+  <img src="https://img.shields.io/badge/Framework-MediaPipe%20%7C%20ONNX%20%7C%20PyTorch-orange.svg" alt="Frameworks">
+  <img src="https://img.shields.io/badge/Hardware-ESP32--CAM%20%7C%20Raspberry%20Pi%205-brightgreen.svg" alt="Hardware">
+</p>
+
+<p align="center">
+  Sistem Pengenalan dan Penerjemahan Bahasa Isyarat secara Real-Time berbasis Machine Learning untuk Lingkungan IoT (<strong>ESP32-CAM + Raspberry Pi 5 / PC</strong>).
+</p>
+
+---
+
+### 🕊️ Filosofi & Makna Logo
+
+Logo **IsyaratKu-Edge** merefleksikan nilai-nilai kesetaraan sosial dan komunikasi inklusif:
+
+1. **Dua Tangan yang Bertemu dalam Lingkaran Tanpa Ujung (Infinity Loop):**
+   Melambangkan komunikasi dua arah yang setara antara teman Tuli dan masyarakat dengar. Tidak ada pihak yang "lebih tinggi" atau "dibanding-bandingkan" — semua manusia setara dalam hak berekspresi dan didengarkan.
+2. **Harmoni Warna Gradien Hangat (Coral) & Sejuk (Cyan-Teal):**
+   Melambangkan kehangatan empati kemanusiaan yang berpadu dengan ketenangan inovasi teknologi. Perbedaan bukanlah jurang pemisah, melainkan keindahan yang saling melengkapi dalam satu ekosistem sosial.
+3. **Simpul & Jalur Sirkuit Digital (Edge AI Nodes):**
+   Menggambarkan teknologi komputasi tepi (*Edge Computing*) yang bekerja langsung di dekat pengguna, senyap namun bertenaga, hadir sebagai jembatan yang menghubungkan hati dan pikiran tanpa batas keterbatasan fisik.
 
 ---
 
@@ -42,6 +72,7 @@ IsyaratKu-edge/
 │   └── models/                   # Model tersimpan (.onnx, .tflite)
 │
 ├── docs/                         # DOKUMENTASI VISUAL & PANDUAN
+│   ├── logo.jpg                  # Logo resmi IsyaratKu-Edge (Inklusivitas & Kesetaraan)
 │   ├── panduan_subjek.jpg        # Poster panduan gestur 7 Subjek
 │   └── panduan_predikat.jpg      # Poster panduan gestur 7 Predikat
 │
@@ -154,3 +185,63 @@ Bentuk tangan untuk kata: **Makan, Minum, Tidur, Belajar, Bekerja, Berjalan, Mem
    - **`H`**: Menampilkan contekan panduan gestur langsung di layar kamera.
    - **`R`**: Reset kalimat dan buffer memori sequence.
    - **`Q`**: Keluar dari pengujian.
+
+---
+
+## 🎓 Konteks Akademik & Penelitian
+
+Proyek ini dikembangkan sebagai bagian dari Tugas Akhir (TA) pada Program Studi Teknik Komputer, Jurusan Teknologi Informasi, Politeknik Negeri Jember:
+
+- **Judul Penelitian:** *Implementasi Machine Learning untuk Deteksi Hand Gesture pada Sistem IoT Berbasis ESP32-CAM*
+- **Peneliti / Pengembang:** **Aiyub Heriyanto** (NIM: `E32240140`)
+- **Dosen Pembimbing:** **I Gede Wiryawan, S.Kom., M.Kom.** (NIP: `19880117 20190 1 008`)
+- **Institusi:** Politeknik Negeri Jember (POLIJE), 2026
+- **Lokasi Mitra & Pengujian Lapangan:** Kedai Susu Tuli Jember (Jl. Manggis No. 95, Krajan, Jemberlor, Kec. Patrang, Kabupaten Jember)
+
+---
+
+## 📚 Sumber Referensi & Kajian Literatur (References)
+
+Pengembangan sistem dan model kecerdasan buatan pada repositori ini berlandaskan pada studi literatur dan kajian ilmiah berikut:
+
+1. **Wiryawan, I. G., Rizaldi, T., Puspitasari, P. S. D., & Kurniasari, A. A. (2025).** *Hand Gesture Detection Implemented based on Long Short-Term Memory (LSTM) Method*. **Jurnal Sistem Cerdas**, 8(3), 343–351. [https://doi.org/10.37396/jsc.v8i3.526](https://doi.org/10.37396/jsc.v8i3.526)
+2. **Kurniasari, A. A., Wiryawan, I. G., Shinta, P., & Puspitasari, D. (2025).** *Implementasi Deteksi Gerakan Tangan untuk Sistem Interaktif Kios menggunakan Metode Long Short-Term Memory (LSTM)*. **Komputika: Jurnal Sistem Komputer**, 14(1), 31–39. [https://doi.org/10.34010/y895rc89](https://doi.org/10.34010/y895rc89)
+3. **Saputro, M. F. A. C., Hadiyoso, S., Irawati, I. D., & Rizal, A. (2026).** *Real-Time Hand Gesture-Based Virtual Mouse System Using ESP32-CAM and OpenCV*. **Jurnal RESTI (Rekayasa Sistem dan Teknologi Informasi)**, 10(1), 53–61. [https://doi.org/10.29207/resti.v10i1.6609](https://doi.org/10.29207/resti.v10i1.6609)
+4. **Imam, A. M., Wardana, A. B., Armyanto, J., & Rahman, M. R. D. S. (2025).** *Klasifikasi Gestur BISINDO Berbasis Landmark Tangan-Lengan Menggunakan Mediapipe Holistic dan Random Forest*. **JSITIK: Jurnal Sistem Informasi Dan Teknologi Informasi Komputer**, 4(1), 31–39. [https://doi.org/10.53624/jsitik.v4i1.718](https://doi.org/10.53624/jsitik.v4i1.718)
+5. **Lugaresi, C., Tang, J., Nash, H., McClanahan, C., Uboweja, E., Hays, M., Zhang, F., Chang, C. L., Yong, M. G., Lee, J., Chang, W. T., Hua, W., Georg, M., & Grundmann, M. (2022).** *MediaPipe: A Framework for Building Perception Pipelines*. **arXiv preprint arXiv:1906.08172**.
+6. **Terven, J., & Cordova-Esparza, D. (2023).** *A Comprehensive Review of YOLO: From YOLOv1 and Beyond*. **ACM Computing Surveys**.
+7. **Dewangga, S., Subianto, M., & Swastika, W. (2024).** *Implementation of Hand Gesture Recognition as Smart Home Devices Controller*. **Journal of Intelligent System and Computation**, 6(2), 63–68. [https://doi.org/10.52985/insyst.v6i2.372](https://doi.org/10.52985/insyst.v6i2.372)
+8. **Sani, A., & Rahmadinni, S. (2022).** *Deteksi Gestur Tangan Berbasis Pengolahan Citra*. **Jurnal Rekayasa Elektrika**, 18(2), 115–124. [https://doi.org/10.17529/jre.v18i2.25147](https://doi.org/10.17529/jre.v18i2.25147)
+9. **Yasen, M., & Jusoh, S. (2019).** *A Systematic Review on Hand Gesture Recognition Techniques, Challenges and Applications*. **PeerJ Computer Science**, 5, e218. [https://doi.org/10.7717/peerj-cs.218](https://doi.org/10.7717/peerj-cs.218)
+10. **Azis, M. A. (2026).** *Rancang Bangun Pendeteksi Nominal Mata Uang Rupiah Berbasis IoT untuk Penyandang Tunanetra Menggunakan Modul ESP32-CAM*. Laporan Tugas Akhir, Program Studi Teknik Komputer, Politeknik Negeri Jember.
+
+---
+
+## 📜 Lisensi Open-Source (Open-Source License)
+
+Proyek **IsyaratKu-Edge** adalah perangkat lunak sumber terbuka (*open-source software*) yang dirilis di bawah naungan **[MIT License](LICENSE)**.
+
+```text
+Hak Cipta (c) 2026 Aiyub Heriyanto & Kontributor Komunitas IsyaratKu-Edge.
+Dilisensikan di bawah Lisensi MIT - Siapapun bebas menggunakan, mempelajari, memodifikasi, 
+dan mendistribusikan perangkat lunak ini untuk keperluan akademis, non-komersial, maupun komersial.
+```
+
+Kode sumber, model komputasi, dan dokumentasi ini didedikasikan untuk kemajuan riset teknologi asistif bagi penyandang disabilitas di Indonesia dan dunia.
+
+---
+
+## 💡 Cara Mengutip (Citation)
+
+Jika Anda menggunakan repositori, arsitektur pipeline, atau dataset IsyaratKu-Edge ini dalam penelitian akademis, silakan kutip sebagai berikut:
+
+```bibtex
+@misc{heriyanto2026isyaratku,
+  author    = {Aiyub Heriyanto and I Gede Wiryawan},
+  title     = {IsyaratKu-Edge: Real-Time Hand Gesture Recognition and Translation System on Embedded Edge IoT},
+  year      = {2026},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/Aiyub150/IsyaratKu-Edge}},
+  note      = {Tugas Akhir Teknik Komputer, Politeknik Negeri Jember}
+}
+```
