@@ -1,0 +1,51 @@
+# Python & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Feedback (User Internal Notes - Ignored as requested)
+Feedback/
+
+# Datasets & Large Artifacts
+data/dataset_raw/*
+!data/dataset_raw/.gitkeep
+data/landmarks_cache/*
+!data/landmarks_cache/.gitkeep
+data/models/*.pt
+data/models/*.h5
+data/models/*.keras
+!data/models/.gitkeep
+
+# Database & Logs
+*.db
+*.sqlite3
+*.log
+logs/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

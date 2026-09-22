@@ -1,0 +1,55 @@
+{
+  "project_name": "IsyaratKu-edge",
+  "classes": [
+    "saya",
+    "kamu",
+    "anda",
+    "kami",
+    "kita",
+    "dia",
+    "mereka",
+    "makan",
+    "minum",
+    "tidur",
+    "belajar",
+    "bekerja",
+    "berjalan",
+    "membaca"
+  ],
+  "categories": {
+    "subjects": [
+      "saya",
+      "kamu",
+      "anda",
+      "kami",
+      "kita",
+      "dia",
+      "mereka"
+    ],
+    "predicates": [
+      "makan",
+      "minum",
+      "tidur",
+      "belajar",
+      "bekerja",
+      "berjalan",
+      "membaca"
+    ]
+  },
+  "label_map": {
+    "0": "saya",
+    "1": "kamu",
+    "2": "anda",
+    "3": "kami",
+    "4": "kita",
+    "5": "dia",
+    "6": "mereka",
+    "7": "makan",
+    "8": "minum",
+    "9": "tidur",
+    "10": "belajar",
+    "11": "bekerja",
+    "12": "berjalan",
+    "13": "membaca"
+  }
+}
