@@ -37,9 +37,10 @@ class Spatial1DCNN:
 
         if self.onnx_session is not None:
             input_name = self.onnx_session.get_inputs()[0].name
-            # Format input: (1, 63, 1) atau (1, 21, 3) sesuai rancangan training
-            input_data = landmark_vector.reshape(1, 63, 1).astype(np.float32)
-            outputs = self.onnx_session.run(None, {input_name: input_data})
+            input_data = landmark_vector.reshape(1, 63).astype(np.float32)
+            output_names = [o.name for o in self.onnx_session.get_outputs()]
+            feat_name = "spatial_features" if "spatial_features" in output_names else output_names[-1]
+            outputs = self.onnx_session.run([feat_name], {input_name: input_data})
             return outputs[0].flatten().astype(np.float32)
 
         # Baseline Dummy Encoder (jika model belum dilatih)

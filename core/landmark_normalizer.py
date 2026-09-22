@@ -35,6 +35,10 @@ def normalize_landmarks(raw_landmarks):
                 for lm in raw_landmarks:
                     coords.append([lm.get('x', 0.0), lm.get('y', 0.0), lm.get('z', 0.0)])
                 coords = np.array(coords, dtype=np.float32)
+            elif hasattr(raw_landmarks[0], 'x'):
+                for lm in raw_landmarks:
+                    coords.append([lm.x, lm.y, lm.z])
+                coords = np.array(coords, dtype=np.float32)
             elif isinstance(raw_landmarks[0], (list, tuple, np.ndarray)):
                 coords = np.array(raw_landmarks, dtype=np.float32)
         elif len(raw_landmarks) == 63:

@@ -57,7 +57,8 @@ def run_pipeline_debug_test(source=CAMERA_INDEX):
 
     prev_time = time.time()
     fps_history = []
-    print("[INFO] Pipeline aktif. Tekan 'r' untuk reset kalimat, 'q' untuk keluar.\n")
+    show_help = False
+    print("[INFO] Pipeline aktif. Tekan 'h' untuk bantuan gestur, 'r' untuk reset, 'q' untuk keluar.\n")
 
     while True:
         t_total_start = time.time()
@@ -150,7 +151,47 @@ def run_pipeline_debug_test(source=CAMERA_INDEX):
         if not curr_sentence:
             curr_sentence = "[ Menunggu gestur Subjek... ]"
         cv2.putText(frame, f"Kalimat: {curr_sentence}", (20, h - 35), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 255), 2)
-        cv2.putText(frame, f"Gestur: {predicted_class}", (20, h - 18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+        cv2.putText(frame, f"Gestur: {predicted_class} | Tekan 'H' untuk Bantuan Gestur", (20, h - 18), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (200, 200, 200), 1)
+
+        # 3. Modal Overlay Bantuan Gestur (Toggle 'H')
+        if show_help:
+            help_overlay = frame.copy()
+            cv2.rectangle(help_overlay, (40, 30), (w - 40, h - 30), (15, 15, 20), -1)
+            cv2.addWeighted(help_overlay, 0.9, frame, 0.1, 0, frame)
+
+            cv2.putText(frame, "PANDUAN BENTUK GESTUR (Tekan 'H' untuk Tutup)", (60, 65),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 255), 2)
+
+            # Kolom Kiri: Subjek
+            cv2.putText(frame, "[SUBJEK]", (60, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+            subjek_help = [
+                "1. saya   : Telunjuk tunjuk ke dada",
+                "2. kamu   : Telunjuk lurus ke depan",
+                "3. anda   : Telapak tangan terbuka sopan",
+                "4. kami   : Tangan 'C' melengkung ke dada",
+                "5. kita   : Gerakan melingkar di dada",
+                "6. dia    : Telunjuk tunjuk ke samping",
+                "7. mereka : Sapuan tangan ke samping"
+            ]
+            for i, line in enumerate(subjek_help):
+                cv2.putText(frame, line, (60, 130 + (i * 24)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (230, 230, 230), 1)
+
+            # Kolom Kanan: Predikat
+            cv2.putText(frame, "[PREDIKAT]", (340, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 200, 255), 2)
+            predikat_help = [
+                "1. makan   : Jari menguncup di mulut",
+                "2. minum   : Ibu jari tegak ke bibir (cangkir)",
+                "3. tidur   : Telapak tangan bantal di pipi",
+                "4. belajar : Buka kedua telapak (buku)",
+                "5. bekerja : Tangan kepal mengetuk bawah",
+                "6. berjalan: 2 jari (telunjuk+tengah) melangkah",
+                "7. membaca : Telunjuk telusuri telapak datar"
+            ]
+            for i, line in enumerate(predikat_help):
+                cv2.putText(frame, line, (340, 130 + (i * 24)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (230, 230, 230), 1)
+
+            cv2.putText(frame, "Aturan: Tahan Subjek (0.5s) -> Tahan Predikat (0.5s) -> Kalimat Jadi + Suara TTS",
+                        (60, h - 55), cv2.FONT_HERSHEY_SIMPLEX, 0.42, (100, 255, 100), 1)
 
         # Tampilkan Window Preview
         cv2.imshow("IsyaratKu-edge [PC TESTING - PERFORMANCE HUD]", frame)
@@ -161,6 +202,8 @@ def run_pipeline_debug_test(source=CAMERA_INDEX):
             sentence_builder.reset_sentence()
             lstm_classifier.reset()
             print("[INFO] Kalimat dan buffer di-reset.")
+        elif key == ord('h'):
+            show_help = not show_help
 
     cap.release()
     mp_extractor.close()

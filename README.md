@@ -41,7 +41,12 @@ IsyaratKu-edge/
 │   ├── landmarks_cache/          # Dataset koordinat .npy (.gitignore)
 │   └── models/                   # Model tersimpan (.onnx, .tflite)
 │
+├── docs/                         # DOKUMENTASI VISUAL & PANDUAN
+│   ├── panduan_subjek.jpg        # Poster panduan gestur 7 Subjek
+│   └── panduan_predikat.jpg      # Poster panduan gestur 7 Predikat
+│
 ├── Feedback/                     # Catatan internal user (Diabaikan oleh Git via .gitignore)
+├── PANDUAN_GESTUR.md             # Panduan lengkap gestur tangan & cara pengujian
 ├── requirements-pc.txt           # Dependensi lengkap PC
 ├── requirements-sbc.txt          # Dependensi ringan SBC
 ├── .gitignore                    # Konfigurasi pengabaian Git
@@ -102,4 +107,50 @@ python sbc_workspace/service_health.py
 
 ---
 
+## 🖐️ Panduan Visual Bentuk Gestur Tangan (SIBI/BISINDO)
 
+Untuk mempermudah pengguna mempraktikkan gestur tangan tanpa kebingungan, berikut adalah panduan visual bentuk tangan untuk **14 kata**:
+
+### 1. Kategori Subjek (7 Kata)
+Bentuk tangan untuk kata: **Saya, Kamu, Anda, Kami, Kita, Dia, Mereka**
+
+![Panduan Isyarat Tangan: Subjek](docs/panduan_subjek.jpg)
+
+| Kata | Bentuk Tangan & Arah | Panduan Gerak Singkat |
+| :--- | :--- | :--- |
+| **`Saya`** | Jari telunjuk lurus, 4 jari mengepal | Ujung telunjuk menunjuk ke tengah dada sendiri |
+| **`Kamu`** | Jari telunjuk lurus horizontal ke depan | Menunjuk lurus ke arah lawan bicara / kamera |
+| **`Anda`** | Kelima jari terbuka rapat dan datar | Telapak tangan terbuka santun ke arah depan |
+| **`Kami`** | Tangan melengkung seperti huruf 'C' | Digerakkan melengkung mendekat ke dada sendiri |
+| **`Kita`** | Tangan terbuka / telunjuk rileks | Gerakan melingkar mendatar di depan dada |
+| **`Dia`** | Jari telunjuk lurus | Menunjuk ke arah samping kanan / kiri |
+| **`Mereka`** | Jari telunjuk / telapak tangan terbuka | Gerakan sapuan (sweep) melebar ke arah samping |
+
+---
+
+### 2. Kategori Predikat (7 Kata)
+Bentuk tangan untuk kata: **Makan, Minum, Tidur, Belajar, Bekerja, Berjalan, Membaca**
+
+![Panduan Isyarat Tangan: Predikat](docs/panduan_predikat.jpg)
+
+| Kata | Bentuk Tangan & Arah | Panduan Gerak Singkat |
+| :--- | :--- | :--- |
+| **`Makan`** | Kelima ujung jari menguncup bersamaan | Ujung jari mendekati bibir / mulut berulang kali |
+| **`Minum`** | Jari melingkar cangkir, ibu jari tegak | Mengarahkan ibu jari ke bibir seperti minum cangkir |
+| **`Tidur`** | Telapak tangan terbuka rapat datar | Telapak tangan ditempel di pipi seperti bantal |
+| **`Belajar`** | Kedua telapak tangan mendatar ke atas | Membuka kedua tangan di dada seolah membaca buku |
+| **`Bekerja`** | Tangan mengepal erat | Gerakan mengetuk ke bawah berulang (seperti palu) |
+| **`Berjalan`** | Jari telunjuk & jari tengah mengarah ke bawah | Digerakkan melangkah maju-mundur bergantian |
+| **`Membaca`** | Satu tangan datar (buku), satu telunjuk | Jari telunjuk menelusuri baris di atas telapak datar |
+
+---
+
+## 🔄 Aturan Pembentukan Kalimat (State Machine)
+
+1. **Kunci Subjek:** Posisikan tangan membentuk salah satu kata **Subjek**, tahan selama $\pm 0.5$ detik (5 frame berturut-turut). Layar bawah akan mengunci kata subjek tersebut.
+2. **Kunci Predikat:** Ganti bentuk tangan ke salah satu kata **Predikat**, tahan selama $\pm 0.5$ detik.
+3. **Kalimat Terbentuk:** Kalimat otomatis terangkai (misal: *"Saya makan."*), dan audio TTS langsung menyuarakannya lewat speaker.
+4. **Kontrol Cepat di Layar Testing (`test_pipeline_debug.py`):**
+   - **`H`**: Menampilkan contekan panduan gestur langsung di layar kamera.
+   - **`R`**: Reset kalimat dan buffer memori sequence.
+   - **`Q`**: Keluar dari pengujian.

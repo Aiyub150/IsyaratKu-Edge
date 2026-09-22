@@ -77,7 +77,10 @@ class TemporalLSTM:
         elif self.onnx_session is not None:
             input_name = self.onnx_session.get_inputs()[0].name
             outputs = self.onnx_session.run(None, {input_name: input_tensor})
-            probs = outputs[0][0]
+            logits = outputs[0][0]
+            # Numerically stable softmax
+            exp_logits = np.exp(logits - np.max(logits))
+            probs = exp_logits / np.sum(exp_logits)
         else:
             # Baseline Dummy Predictor (sebelum model dilatih):
             # Menghasilkan prediksi deterministik berdasarkan rata-rata energi landmark

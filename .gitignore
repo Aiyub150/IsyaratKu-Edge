@@ -34,6 +34,8 @@ data/landmarks_cache/*
 data/models/*.pt
 data/models/*.h5
 data/models/*.keras
+data/models/*.onnx
+data/models/*.task
 !data/models/.gitkeep
 
 # Database & Logs
@@ -49,3 +51,8 @@ logs/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Blueprints & Documentation Walkthroughs
+Blueprint*.md
+walkthrough.md
+walkthrough*.md
