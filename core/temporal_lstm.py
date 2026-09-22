@@ -32,8 +32,19 @@ class TemporalLSTM:
             data = json.load(f)
             self.classes = data.get("classes", [])
 
-        if model_path and Path(model_path).exists():
-            path_str = str(model_path)
+        # Auto-detect file format and fallback between .onnx and .tflite
+        target_path = None
+        if model_path:
+            p = Path(model_path)
+            if p.exists():
+                target_path = p
+            elif p.with_suffix(".onnx").exists():
+                target_path = p.with_suffix(".onnx")
+            elif p.with_suffix(".tflite").exists():
+                target_path = p.with_suffix(".tflite")
+
+        if target_path and target_path.exists():
+            path_str = str(target_path)
             if path_str.endswith(".tflite"):
                 try:
                     import tflite_runtime.interpreter as tflite
@@ -42,9 +53,13 @@ class TemporalLSTM:
                     import tensorflow as tf
                     self.tflite_interpreter = tf.lite.Interpreter(model_path=path_str)
                 self.tflite_interpreter.allocate_tensors()
+                print(f"[TemporalLSTM] Memuat model TFLite: {target_path.name}")
             elif path_str.endswith(".onnx"):
                 import onnxruntime as ort
                 self.onnx_session = ort.InferenceSession(path_str, providers=['CPUExecutionProvider'])
+                print(f"[TemporalLSTM] Memuat model ONNX: {target_path.name}")
+        else:
+            print(f"[TemporalLSTM] PERINGATAN: Model {model_path} tidak ditemukan. Menggunakan baseline dummy.")
 
     def add_feature(self, feature_vector):
         """Menambahkan satu vektor fitur 64-d ke buffer sekuens."""

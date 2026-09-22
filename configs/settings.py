@@ -22,6 +22,8 @@ MP_MIN_TRACKING_CONFIDENCE = 0.5
 NUM_LANDMARKS = 21
 LANDMARK_DIMENSIONS = 3          # x, y, z
 LANDMARK_VECTOR_SIZE = NUM_LANDMARKS * LANDMARK_DIMENSIONS  # 63
+PALM_BASE_LANDMARK = 0           # Wrist
+PALM_KNUCKLE_LANDMARK = 9        # Middle Finger MCP (Rigid Palm Scale Reference)
 
 # Sequence & Model Configuration
 SEQUENCE_LENGTH = 12             # Jumlah frame per sequence temporal
@@ -29,6 +31,12 @@ NUM_CLASSES = 14
 CONFIDENCE_THRESHOLD = 0.65       # Ambang batas kepercayaan prediksi
 DEBOUNCE_FRAMES = 5              # Jumlah frame berturut-turut untuk stabilisasi gestur
 COOLDOWN_SECONDS = 1.5           # Cooldown antar kata agar tidak berulang cepat
+SENTENCE_HOLD_SECONDS = 2.5      # Durasi tampilan kalimat lengkap sebelum di-clear
+
+# TTS Configuration
+TTS_VOICE_LANG = "id"            # Bahasa Indonesia (mencari voice id-ID, Indonesia, Andika, Gadis)
+TTS_SPEECH_RATE = 150
+TTS_VOLUME = 1.0
 
 # File Paths
 DATA_DIR = BASE_DIR / "data"
@@ -38,6 +46,7 @@ MODELS_DIR = DATA_DIR / "models"
 
 YOLO_MODEL_PATH = MODELS_DIR / "yolov8n_hand.onnx"
 SPATIAL_CNN_PATH = MODELS_DIR / "spatial_1dcnn.onnx"
-TEMPORAL_LSTM_PATH = MODELS_DIR / "temporal_lstm.tflite"
+# Prioritaskan ONNX model yang ada di disk, fallback ke TFLite jika tersedia
+TEMPORAL_LSTM_PATH = MODELS_DIR / "temporal_lstm.onnx"
 LABELS_PATH = BASE_DIR / "configs" / "labels.json"
 DATABASE_PATH = BASE_DIR / "data" / "isyaratku.db"

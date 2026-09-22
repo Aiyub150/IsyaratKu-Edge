@@ -88,13 +88,13 @@ def run_sbc_production(source=ESP32_STREAM_URL, headless=False):
                 # 5. LSTM Temporal Classification
                 predicted_class, confidence, _ = lstm_classifier.predict()
 
-                # 6. Sentence Builder
+                # 6. Sentence Builder (FSM Feedback #2)
                 status = sentence_builder.process_gesture(predicted_class, confidence, threshold=CONFIDENCE_THRESHOLD)
 
-                # 7. Output Audio TTS
-                if status["is_sentence_complete"]:
-                    logger.info(f"[KALIMAT SELESAI]: \"{status['sentence']}\"")
-                    tts.speak(status["sentence"])
+                # 7. Output Audio TTS per kata
+                if status.get("word_to_speak"):
+                    logger.info(f"[TTS OUTPUT]: \"{status['word_to_speak']}\" (FSM: {status['state']})")
+                    tts.speak(status["word_to_speak"])
 
         # Tampilan Visual Bersih (Jika bukan headless mode)
         if not headless:

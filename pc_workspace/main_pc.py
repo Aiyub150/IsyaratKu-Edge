@@ -71,16 +71,21 @@ def run_pc_main(source=CAMERA_INDEX, debug_mode=False):
                 # 3. Normalisasi
                 norm_vector = normalize_landmarks(raw_landmarks)
 
+                # Deteksi Gestur 'Salah' SIBI untuk reset kalimat (Feedback #4 Poin 6)
+                if sentence_builder.check_reset_gesture(norm_vector):
+                    lstm_classifier.reset()
+                    print("[EVENT RESET] Gestur SIBI 'Salah' terdeteksi -> Kalimat direset.")
+
                 # 4. 1D-CNN & LSTM
                 feat = cnn_encoder.encode(norm_vector)
                 lstm_classifier.add_feature(feat)
                 predicted_class, confidence, _ = lstm_classifier.predict()
 
-                # 5. Sentence Builder & TTS
+                # 5. Sentence Builder & TTS (FSM Feedback #2)
                 status = sentence_builder.process_gesture(predicted_class, confidence, threshold=CONFIDENCE_THRESHOLD)
-                if status["is_sentence_complete"]:
-                    print(f"[TTS OUTPUT]: \"{status['sentence']}\"")
-                    tts.speak(status["sentence"])
+                if status.get("word_to_speak"):
+                    print(f"[TTS OUTPUT]: \"{status['word_to_speak']}\" (FSM: {status['state']})")
+                    tts.speak(status["word_to_speak"])
 
         # Perhitungan FPS
         curr_time = time.time()
@@ -88,7 +93,7 @@ def run_pc_main(source=CAMERA_INDEX, debug_mode=False):
         prev_time = curr_time
 
         # Render Visual
-        curr_sentence = sentence_builder._get_status(None, False)["sentence"]
+        curr_sentence = sentence_builder._get_status(None, None, False)["sentence"]
         if debug_mode:
             # Tampilan HUD Lengkap
             cv2.putText(frame, f"FPS: {fps:.1f} | Conf: {confidence * 100:.0f}%", (20, 30),

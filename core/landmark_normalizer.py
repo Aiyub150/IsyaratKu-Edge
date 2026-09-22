@@ -56,13 +56,17 @@ def normalize_landmarks(raw_landmarks):
     wrist = coords[0].copy()
     translated = coords - wrist
 
-    # 3. Skala: Hitung jarak Euclidean ke Middle Finger Tip (Landmark 12)
-    # Landmark 12 = Ujung jari tengah
-    scale_dist = np.linalg.norm(translated[12])
-    if scale_dist < 1e-6:
-        # Fallback jika jari tengah terlipat: gunakan jarak Euclidean maksimum dari titik manapun ke wrist
+    # 3. Skala: Gunakan acuan palm scale yang rigid (Wrist [0] ke Middle MCP [9])
+    # Landmark 9 = Pangkal sendi jari tengah (Metacarpophalangeal / MCP joint)
+    # Acuan ini anatomis kaku dan TIDAK berubah baik saat jari terbuka lurus maupun mengepal/menekuk
+    # (mencegah distorsi skala ekstrem pada gestur 'saya', 'bekerja', 'minum', dll.)
+    scale_dist = np.linalg.norm(translated[9])
+    
+    # Fallback jika landmark 9 terlalu dekat dengan wrist (< 1e-4)
+    if scale_dist < 1e-4:
+        # Gunakan jarak maksimum dari wrist ke titik sendi manapun
         scale_dist = np.max(np.linalg.norm(translated, axis=1))
-        if scale_dist < 1e-6:
+        if scale_dist < 1e-4:
             scale_dist = 1.0
 
     normalized = translated / scale_dist

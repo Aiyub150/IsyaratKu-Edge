@@ -27,11 +27,12 @@ class MediaPipeExtractor:
     - Debug Mode (PC/Testing): Visualisasi 21 titik sendi dan garis skeleton tangan berwarna.
     """
 
-    def __init__(self, max_num_hands=1, min_detection_confidence=0.6, min_tracking_confidence=0.5, model_path=None):
+    def __init__(self, max_num_hands=2, min_detection_confidence=0.6, min_tracking_confidence=0.5, model_path=None):
         self.max_num_hands = max_num_hands
         self.min_detection_confidence = min_detection_confidence
         self.min_tracking_confidence = min_tracking_confidence
         self.model_path = model_path or DEFAULT_MODEL_PATH
+        self.prev_primary_center = None
 
         import mediapipe as mp
         self.mp = mp
@@ -73,9 +74,50 @@ class MediaPipeExtractor:
         )
         self.detector = vision.HandLandmarker.create_from_options(options)
 
+    def _select_primary_hand(self, all_hands):
+        """
+        Menentukan tangan primer (dominan) secara konsisten antar-frame.
+        Mencegah jittering/berganti tangan acak saat kedua tangan terdeteksi (misal gestur 'belajar').
+        """
+        if not all_hands:
+            return None, None
+        if len(all_hands) == 1:
+            landmarks = all_hands[0] if hasattr(all_hands[0], '__iter__') else all_hands[0].landmark
+            cx = np.mean([lm.x for lm in landmarks])
+            cy = np.mean([lm.y for lm in landmarks])
+            self.prev_primary_center = (cx, cy)
+            return landmarks, 0
+
+        # Jika ada > 1 tangan, cari tangan yang paling dekat dengan posisi frame sebelumnya
+        best_idx = 0
+        best_dist = float('inf')
+
+        for idx, hand in enumerate(all_hands):
+            landmarks = hand if hasattr(hand, '__iter__') else hand.landmark
+            cx = np.mean([lm.x for lm in landmarks])
+            cy = np.mean([lm.y for lm in landmarks])
+
+            if self.prev_primary_center is not None:
+                dist = (cx - self.prev_primary_center[0]) ** 2 + (cy - self.prev_primary_center[1]) ** 2
+            else:
+                # Jika belum ada referensi sebelumnya: pilih tangan yang posisinya paling mendekati tengah frame
+                dist = (cx - 0.5) ** 2 + (cy - 0.5) ** 2
+
+            if dist < best_dist:
+                best_dist = dist
+                best_idx = idx
+
+        primary_hand = all_hands[best_idx]
+        primary_landmarks = primary_hand if hasattr(primary_hand, '__iter__') else primary_hand.landmark
+        cx = np.mean([lm.x for lm in primary_landmarks])
+        cy = np.mean([lm.y for lm in primary_landmarks])
+        self.prev_primary_center = (cx, cy)
+        return primary_landmarks, best_idx
+
     def extract(self, image, draw_debug=False):
         """
         Mengekstrak landmark dari frame citra.
+        Menangani multiple hands dan menstabilkan tangan primer.
 
         Args:
             image (numpy.ndarray): Frame citra BGR dari kamera
@@ -88,47 +130,54 @@ class MediaPipeExtractor:
             return False, None, image
 
         h, w = image.shape[:2]
+        all_hands = []
 
         if not self.use_tasks_api:
             # Legacy Solutions API
             img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             results = self.hands.process(img_rgb)
-            if not results.multi_hand_landmarks:
-                return False, None, image
-            hand_landmarks = results.multi_hand_landmarks[0]
-            landmarks_list = hand_landmarks.landmark
+            if results.multi_hand_landmarks:
+                all_hands = results.multi_hand_landmarks
         else:
             # Modern Tasks API
             img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             mp_image = self.mp.Image(image_format=self.mp.ImageFormat.SRGB, data=img_rgb)
             results = self.detector.detect(mp_image)
-            if not results.hand_landmarks or len(results.hand_landmarks) == 0:
-                return False, None, image
-            landmarks_list = results.hand_landmarks[0]
+            if results.hand_landmarks:
+                all_hands = results.hand_landmarks
+
+        if not all_hands:
+            self.prev_primary_center = None
+            return False, None, image
+
+        primary_landmarks, primary_idx = self._select_primary_hand(all_hands)
 
         if draw_debug:
-            self._draw_landmarks_cv2(image, landmarks_list, w, h)
+            for idx, hand in enumerate(all_hands):
+                lms = hand if hasattr(hand, '__iter__') else hand.landmark
+                is_primary = (idx == primary_idx)
+                self._draw_landmarks_cv2(image, lms, w, h, is_primary=is_primary)
 
-        return True, landmarks_list, image
+        return True, primary_landmarks, image
 
-    def _draw_landmarks_cv2(self, image, landmarks, w, h):
+    def _draw_landmarks_cv2(self, image, landmarks, w, h, is_primary=True):
         """Gambar skeleton dan titik landmark langsung dengan OpenCV untuk performa maksimal."""
         coords = []
         for lm in landmarks:
             cx, cy = int(lm.x * w), int(lm.y * h)
             coords.append((cx, cy))
 
-        # Gambar garis koneksi antar sendi (Cyan / Neon Green)
+        # Garis koneksi sendi: Hijau neon untuk primer, abu-abu/cyan untuk sekunder
+        line_color = (0, 230, 115) if is_primary else (180, 180, 180)
+        dot_color = (0, 215, 255) if is_primary else (200, 200, 200)
+
         for start_idx, end_idx in HAND_CONNECTIONS:
             if start_idx < len(coords) and end_idx < len(coords):
-                pt1 = coords[start_idx]
-                pt2 = coords[end_idx]
-                cv2.line(image, pt1, pt2, (0, 230, 115), 2, cv2.LINE_AA)
+                cv2.line(image, coords[start_idx], coords[end_idx], line_color, 2 if is_primary else 1, cv2.LINE_AA)
 
-        # Gambar titik sendi (Kuning emas dengan batas hitam)
         for cx, cy in coords:
-            cv2.circle(image, (cx, cy), 5, (0, 215, 255), -1, cv2.LINE_AA)
-            cv2.circle(image, (cx, cy), 5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.circle(image, (cx, cy), 5 if is_primary else 3, dot_color, -1, cv2.LINE_AA)
+            cv2.circle(image, (cx, cy), 5 if is_primary else 3, (0, 0, 0), 1, cv2.LINE_AA)
 
     def close(self):
         """Menutup instance MediaPipe."""
