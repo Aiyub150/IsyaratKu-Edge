@@ -102,5 +102,4 @@ python sbc_workspace/service_health.py
 
 ---
 
-## 🔒 Catatan Keamanan Git
-Folder `Feedback/` telah didaftarkan ke dalam `.gitignore` sehingga seluruh catatan pribadi atau masukan yang Anda letakkan di dalam folder tersebut tidak akan terunggah ke repositori GitHub.
+
